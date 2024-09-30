@@ -1,11 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Página con Variable de Entorno</title>
+    <meta charset="UTF-8">
+    <title>Generador de Números + variable de entorno </title>
 </head>
 <body>
-  <h1>Quien llama</h1>
-  <label>La clave es: <%= clave %></label>
+    <button id="start-button">Iniciar Acumulación</button>
+    <h1 id="total">Total: 0</h1>
+    <h1>Quien llama</h1>
+    <label>La clave es: <%= clave %></label>
+
+    <script>
+        let intervalId;
+
+        document.getElementById('start-button').addEventListener('click', () => {
+            intervalId = setInterval(() => {
+                fetch('/.netlify/functions/accumulator')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('total').innerText = `Total: ${data.total}`;
+                    });
+            }, 1000);
+        });
+
+        // Mostrar el total al cargar la página
+        window.onload = () => {
+            fetch('/.netlify/functions/accumulator')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total').innerText = `Total: ${data.total}`;
+                });
+        };
+    </script>
 </body>
 </html>
